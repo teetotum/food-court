@@ -1,0 +1,57 @@
+.meals {
+  padding: 24px;
+  td,
+  th {
+    padding: 16px;
+  }
+}
+
+.sortingHeader {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: 1fr 64px;
+}
+
+.sortingButtons {
+  display: inline-block;
+}
+
+.sortButton {
+  --accent-color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 24px;
+  width: 24px;
+
+  &::before {
+    content: "";
+    display: block;
+    width: 0;
+    height: 0;
+    border: 8px solid transparent;
+  }
+
+  &.isActive {
+    --accent-color: black;
+    background-color: white;
+  }
+}
+
+.sortAscending {
+  &::before {
+    border-bottom-color: var(--accent-color);
+  }
+}
+
+.sortDescending {
+  &::before {
+    border-top-color: var(--accent-color);
+  }
+}
+
+.filters {
+  padding: 24px;
+  display: flex;
+  gap: 24px;
+}
