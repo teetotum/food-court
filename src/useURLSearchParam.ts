@@ -30,14 +30,6 @@ export const useURLSearchParam = (name: string, _default?: any) => {
         params[name] = encodeURIComponent(value);
       }
 
-      // todo: find out what parts of the current location must be preserved
-      //
-      // pathname?: Pathname | undefined;
-      // search?: Search | undefined;
-      // state?: S | undefined;
-      // hash?: Hash | undefined;
-      // key?: LocationKey | undefined;
-
       navigate(
         {
           hash: location.hash,

@@ -1,0 +1,28 @@
+import { useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
+
+// FIRST
+
+const navigate = useNavigate();
+useEffect(() => {
+  if (filter)
+    navigate(`?filter=${filter}`, { replace: true });
+  else navigate("");
+}, [filter]);
+
+
+
+// SECOND
+
+const getQueryParam = (key: string) => {
+  const params = new URLSearchParams(window.location.search);
+  return params.get(key) ?? undefined;
+};
+
+const [filter, setFilter] = useState<string | undefined>(() => getQueryParam("filter"));
+
+
+// THIRD
+
+const { search } = useLocation();
+useEffect(() => setFilter(getQueryParam('filter')), [search]);
