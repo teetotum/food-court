@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { suggestions } from './data';
+import { useSyncState } from './useSyncState';
 
 export const Suggestions = () => {
   const [index, setIndex] = useState(0);
@@ -14,12 +15,32 @@ export const Suggestions = () => {
     }
   }, [isOff]);
 
+  useSyncState('suggestionsOff', isOff, setIsOff);
+
   // SIMPLEST APPROACH
-  const navigate = useNavigate();
-  useEffect(() => {
-    if (isOff) navigate(`?suggestionsOff=${isOff}`, { replace: true });
-    else navigate('');
-  }, [isOff]);
+  //   const navigate = useNavigate();
+  //   useEffect(() => {
+  //     if (isOff) navigate(`?suggestionsOff=${isOff}`, { replace: true });
+  //     else navigate('');
+  //   }, [isOff]);
+
+  // REFINED APPROACH
+  //   const navigate = useNavigate();
+  //   useEffect(() => {
+  //     if (isOff) {
+  //       const params = new URLSearchParams(window.location.search);
+  //       params.set('suggestionsOff', `${isOff}`);
+  //       navigate(`?${params.toString()}`, {
+  //         replace: true,
+  //       });
+  //     } else {
+  //       const params = new URLSearchParams(window.location.search);
+  //       params.delete('suggestionsOff');
+  //       navigate(`?${params.toString()}`, {
+  //         replace: true,
+  //       });
+  //     }
+  //   }, [isOff]);
 
   return (
     <div>

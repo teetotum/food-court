@@ -4,9 +4,11 @@ import { data, Meal } from './data';
 import style from './meals.module.scss';
 import { classnames } from './classnames';
 import { useURLSearchParam } from './useURLSearchParam';
-//import { useSyncState } from './useSyncState';
+import { useSyncState } from './useSyncState';
 //import { useSyncState } from './useSyncStateCorrected';
-import { useSyncStateArray } from './useSyncStateArray';
+//import { useSyncStateArray } from './useSyncStateArray';
+
+//() => getQueryParam('filter')
 
 const getQueryParam = (key: string) => {
   const params = new URLSearchParams(window.location.search);
@@ -17,18 +19,13 @@ export const Meals = () => {
   const [sorting, setSorting] = useState<SortState>();
   const sorted = sorting ? [...data].sort(getSortingFunction(sorting)) : data;
   const [filter, setFilter] = useState<string | undefined>(() => getQueryParam('filter'));
-  const [filters, setFilters] = useState<string[]>([]);
+
   const filtered = filter ? sorted.filter((x) => x.type === filter) : sorted;
   const toggleFilter = (value: string) => setFilter((cur) => (cur === value ? undefined : value));
   const isActiveFilter = (value: string) => filter === value;
 
-  // SIMPLEST APPROACH
-  // const navigate = useNavigate();
-  // useEffect(() => {
-  //   if (filter)
-  //     navigate(`?filter=${filter}`, { replace: true });
-  //   else navigate('');
-  // }, [filter]);
+  useSyncState('sortingKey', sorting?.sortkey, (_) => console.log(_));
+  useSyncState('filter', filter, setFilter);
 
   // REFINED APPROACH
   // const navigate = useNavigate();
@@ -48,32 +45,15 @@ export const Meals = () => {
   //   }
   // }, [filter]);
 
+  // const navigate = useNavigate();
+  // useEffect(() => {
+  //   if (filter) navigate(`?filter=${filter}`);
+  //   else navigate(`?`);
+  // }, [filter]);
   // const { search } = useLocation();
-  // useEffect(() => setFilter(getQueryParam('filter')), [search]);
-
-  // HOOK APPROACH
-  // useSyncState('sortkey', sorting?.sortkey, (v) =>
-  //   setSorting((s) => ({ sortkey: v, direction: s?.direction ?? 'ascending' }))
-  // );
-  useSyncState('filter', filter, setFilter);
-  useSyncState('sorting', sorting ? `${sorting.sortkey},${sorting.direction}` : undefined, (s) => {
-    if (s) {
-      const [sortkey, direction] = s.split(',');
-      setSorting({ sortkey, direction });
-    } else {
-      setSorting(undefined);
-    }
-  });
-  useSyncStateArray('filters', filters, (_) => {
-    console.log(_);
-  });
-  useEffect(() => {
-    if (filter)
-      setFilters((fs) => {
-        if (fs.includes(filter)) return [...fs];
-        else return [...fs, filter];
-      });
-  }, [filter]);
+  // useEffect(() => {
+  //   setFilter(getQueryParam('filter'));
+  // }, [search]);
 
   return (
     <div className={style.meals}>
@@ -135,6 +115,60 @@ export const Meals = () => {
     </div>
   );
 };
+
+// SIMPLEST APPROACH
+// const navigate = useNavigate();
+// useEffect(() => {
+//   if (filter)
+//     navigate(`?filter=${filter}`, { replace: true });
+//   else navigate('');
+// }, [filter]);
+
+// REFINED APPROACH
+// const navigate = useNavigate();
+// useEffect(() => {
+//   if (filter) {
+//     const params = new URLSearchParams(window.location.search);
+//     params.set('filter', `${filter}`);
+//     navigate(`?${params.toString()}`, {
+//       replace: true,
+//     });
+//   } else {
+//     const params = new URLSearchParams(window.location.search);
+//     params.delete('filter');
+//     navigate(`?${params.toString()}`, {
+//       replace: true,
+//     });
+//   }
+// }, [filter]);
+
+// const { search } = useLocation();
+// useEffect(() => setFilter(getQueryParam('filter')), [search]);
+
+// HOOK APPROACH
+// useSyncState('sortkey', sorting?.sortkey, (v) =>
+//   setSorting((s) => ({ sortkey: v, direction: s?.direction ?? 'ascending' }))
+// );
+// useSyncState('filter', filter, setFilter);
+// useSyncState('sorting', sorting ? `${sorting.sortkey},${sorting.direction}` : undefined, (s) => {
+//   if (s) {
+//     const [sortkey, direction] = s.split(',');
+//     setSorting({ sortkey, direction });
+//   } else {
+//     setSorting(undefined);
+//   }
+// });
+//const [filters, setFilters] = useState<string[]>([]);
+// useSyncStateArray('filters', filters, (_) => {
+//   console.log(_);
+// });
+// useEffect(() => {
+//   if (filter)
+//     setFilters((fs) => {
+//       if (fs.includes(filter)) return [...fs];
+//       else return [...fs, filter];
+//     });
+// }, [filter]);
 
 // first implementation with useURLSearchParam hook:
 //

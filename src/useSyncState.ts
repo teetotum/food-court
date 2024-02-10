@@ -11,13 +11,13 @@ export const useSyncState = (key: string, value: any, setValue: (newValue: any) 
   const location = useLocation();
   useEffect(() => {
     if (value) {
-      const params = new URLSearchParams(location.search);
+      const params = new URLSearchParams(window.location.search);
       params.set(key, `${value}`);
       navigate(`?${params.toString()}`, {
         replace: true,
       });
     } else {
-      const params = new URLSearchParams(location.search);
+      const params = new URLSearchParams(window.location.search);
       params.delete(key);
       navigate(`?${params.toString()}`, {
         replace: true,
